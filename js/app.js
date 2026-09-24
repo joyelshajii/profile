@@ -1,5 +1,5 @@
 // ============================================================
-// MAIN APP — Initialization, routing, scroll, interactions
+// MAIN APP — Swiss Editorial Interactions, Cursor, Navigation
 // ============================================================
 
 const App = {
@@ -7,6 +7,7 @@ const App = {
     ThemeManager.init();
     this.render();
     this._bindEvents();
+    this._initCursor();
     this._setupScrollObserver();
 
     // Check if admin is logged in
@@ -16,22 +17,23 @@ const App = {
   },
 
   // ============================================================
-  // RENDER ALL
+  // RENDER APP
   // ============================================================
   render() {
     const data = DataManager.getData();
 
     document.getElementById('app').innerHTML = `
+      ${Components.renderHeader(data.profile)}
       ${Components.renderHero(data.profile)}
       ${Components.renderMenuBar()}
-      <main class="main-content">
+      <main class="main-content" id="main-content">
         ${Components.renderAbout(data.profile)}
         ${Components.renderProjects(data.projects)}
         ${Components.renderExperience(data.experience)}
         ${Components.renderSkills(data.skills)}
-        ${Components.renderEducation(data.education)}
-        ${Components.renderCertificates(data.certificates)}
+        ${Components.renderEducationAndCertificates(data.education, data.certificates)}
         ${Components.renderLeadership(data.leadership)}
+        ${Components.renderContact(data.profile)}
       </main>
       ${Components.renderFooter(data.profile)}
       ${Components.renderSidePanel()}
@@ -42,9 +44,8 @@ const App = {
       ${Admin.renderEditOverlay()}
     `;
 
-    // Re-setup after render
+    // Re-bind scroll observer and theme icon
     this._setupScrollObserver();
-    this._animateSkillBars();
 
     if (Admin.isLoggedIn()) {
       Admin.showAdminBar();
@@ -52,7 +53,61 @@ const App = {
   },
 
   // ============================================================
-  // EVENTS
+  // MINIMAL CUSTOM CURSOR
+  // ============================================================
+  _initCursor() {
+    // Only enable custom cursor if fine pointer (desktop mouse)
+    if (!window.matchMedia("(pointer: fine)").matches) return;
+
+    const dot = document.getElementById('cursor-dot');
+    const ring = document.getElementById('cursor-ring');
+    if (!dot || !ring) return;
+
+    let mouseX = -100, mouseY = -100;
+    let ringX = -100, ringY = -100;
+
+    window.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      dot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`;
+    });
+
+    // Smooth animation loop for ring
+    const renderRing = () => {
+      ringX += (mouseX - ringX) * 0.18;
+      ringY += (mouseY - ringY) * 0.18;
+      ring.style.transform = `translate3d(${ringX}px, ${ringY}px, 0)`;
+      requestAnimationFrame(renderRing);
+    };
+    requestAnimationFrame(renderRing);
+
+    // Expand cursor on interactive elements
+    const interactiveSelectors = 'a, button, [onclick], .project-row, .experience-entry, input, .btn-circular';
+    document.addEventListener('mouseover', (e) => {
+      if (e.target.closest(interactiveSelectors)) {
+        document.body.classList.add('cursor-hover');
+      }
+    });
+
+    document.addEventListener('mouseout', (e) => {
+      if (e.target.closest(interactiveSelectors)) {
+        document.body.classList.remove('cursor-hover');
+      }
+    });
+
+    document.addEventListener('mouseleave', () => {
+      dot.style.opacity = '0';
+      ring.style.opacity = '0';
+    });
+
+    document.addEventListener('mouseenter', () => {
+      dot.style.opacity = '1';
+      ring.style.opacity = '1';
+    });
+  },
+
+  // ============================================================
+  // EVENT BINDINGS
   // ============================================================
   _bindEvents() {
     // Side panel toggle
@@ -65,16 +120,29 @@ const App = {
       }
     });
 
-    // Menu bar item click
+    // Ticker item click navigation
     document.addEventListener('click', (e) => {
-      const item = e.target.closest('.menu-bar-item');
-      if (item) {
-        const section = item.dataset.section;
-        this.navigateTo(section);
+      const tickerItem = e.target.closest('.ticker-item');
+      if (tickerItem) {
+        const section = tickerItem.dataset.section;
+        if (section) this.navigateTo(section);
       }
     });
 
-    // Detail overlay close on background click
+    // Header smooth anchor jump
+    document.addEventListener('click', (e) => {
+      const anchor = e.target.closest('a[href^="#"]');
+      if (anchor) {
+        const href = anchor.getAttribute('href');
+        if (href && href.length > 1) {
+          e.preventDefault();
+          const targetId = href.replace('#', '');
+          this.navigateTo(targetId);
+        }
+      }
+    });
+
+    // Modal background close
     document.addEventListener('click', (e) => {
       if (e.target.id === 'detail-overlay') {
         this.closeDetail();
@@ -90,7 +158,7 @@ const App = {
       }
     });
 
-    // Keyboard: Escape
+    // Keyboard shortcuts
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
         this.closeDetail();
@@ -101,73 +169,65 @@ const App = {
       }
     });
 
-    // Menu bar scroll shadow
+    // Sticky header border on scroll
     window.addEventListener('scroll', () => {
-      const menuBar = document.getElementById('menu-bar');
-      if (menuBar) {
-        if (window.scrollY > 50) {
-          menuBar.classList.add('scrolled');
+      const header = document.getElementById('site-header');
+      if (header) {
+        if (window.scrollY > 40) {
+          header.classList.add('header-scrolled');
         } else {
-          menuBar.classList.remove('scrolled');
+          header.classList.remove('header-scrolled');
         }
       }
-    });
+    }, { passive: true });
   },
 
   // ============================================================
-  // SCROLL OBSERVER — Animate sections on scroll
+  // SCROLL OBSERVER
   // ============================================================
   _setupScrollObserver() {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-          // Animate skill bars when skills section is visible
-          if (entry.target.id === 'section-skills') {
-            this._animateSkillBars();
-          }
+          entry.target.classList.add('in-view');
         }
       });
-    }, { threshold: 0.1 });
+    }, { threshold: 0.08 });
 
-    document.querySelectorAll('.section').forEach(s => observer.observe(s));
-  },
-
-  _animateSkillBars() {
-    setTimeout(() => {
-      document.querySelectorAll('.skill-bar-fill').forEach(bar => {
-        const level = bar.dataset.level;
-        bar.style.width = level + '%';
-      });
-    }, 300);
+    document.querySelectorAll('.editorial-section, .hero-section').forEach(s => observer.observe(s));
   },
 
   // ============================================================
   // NAVIGATION
   // ============================================================
-  navigateTo(sectionId) {
+  navigateTo(target) {
     this.closeSidePanel();
-    const el = document.getElementById(`section-${sectionId}`);
+    let el = document.getElementById(target);
+    if (!el && !target.startsWith('section-')) {
+      el = document.getElementById(`section-${target}`);
+    }
     if (el) {
-      const offset = document.getElementById('menu-bar')?.offsetHeight || 50;
-      const top = el.getBoundingClientRect().top + window.pageYOffset - offset - 10;
-      window.scrollTo({ top, behavior: 'smooth' });
+      const headerOffset = document.getElementById('site-header')?.offsetHeight || 64;
+      const targetPos = el.getBoundingClientRect().top + window.pageYOffset - headerOffset;
+      window.scrollTo({ top: targetPos, behavior: 'smooth' });
     }
   },
 
   // ============================================================
-  // SIDE PANEL
+  // SIDE PANEL DRAWER
   // ============================================================
   toggleSidePanel() {
     const panel = document.getElementById('side-panel');
     const overlay = document.getElementById('side-panel-overlay');
     panel?.classList.toggle('active');
     overlay?.classList.toggle('active');
+    document.body.classList.toggle('drawer-open');
   },
 
   closeSidePanel() {
     document.getElementById('side-panel')?.classList.remove('active');
     document.getElementById('side-panel-overlay')?.classList.remove('active');
+    document.body.classList.remove('drawer-open');
   },
 
   // ============================================================
@@ -200,35 +260,37 @@ const App = {
   },
 
   // ============================================================
-  // LOGIN
+  // LOGIN MODAL
   // ============================================================
   showLogin() {
     this.closeSidePanel();
     document.getElementById('login-overlay')?.classList.add('active');
-    setTimeout(() => document.getElementById('login-username')?.focus(), 100);
+    setTimeout(() => document.getElementById('login-username')?.focus(), 120);
   },
 
   hideLogin() {
     document.getElementById('login-overlay')?.classList.remove('active');
-    document.getElementById('login-error').style.display = 'none';
+    const err = document.getElementById('login-error');
+    if (err) err.style.display = 'none';
   },
 
   handleLogin(e) {
     e.preventDefault();
-    const username = document.getElementById('login-username').value;
-    const password = document.getElementById('login-password').value;
+    const username = document.getElementById('login-username')?.value;
+    const password = document.getElementById('login-password')?.value;
 
     if (Admin.login(username, password)) {
       this.hideLogin();
       Admin.showAdminBar();
     } else {
-      document.getElementById('login-error').style.display = 'block';
+      const err = document.getElementById('login-error');
+      if (err) err.style.display = 'block';
     }
     return false;
   },
 
   // ============================================================
-  // HELP
+  // HELP MODAL
   // ============================================================
   showHelp() {
     this.closeSidePanel();

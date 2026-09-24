@@ -10,7 +10,11 @@ const DEFAULT_DATA = {
     email: "joyelshajim@gmail.com",
     github: "https://github.com/joyelshajii",
     linkedin: "https://linkedin.com/in/joyelshaji",
-    photo: "assets/profile.jpg",
+    photo: "assets/joyel-hero.jpg",
+    aboutPhoto: "assets/joyel-about.jpg",
+    outdoorPhoto: "assets/joyel-outdoor.jpg",
+    benchPhoto: "assets/joyel-bench.jpg",
+    techPhoto: "assets/joyel-tech.jpg",
     about: `I'm Joyel Shaji, a passionate Computer Science Engineering student at Amal Jyothi College of Engineering with a consistent record of academic excellence — including a perfect 10.0 SGPA in my third semester and placement on the Manager's Honors List every semester. I thrive at the intersection of technology, product thinking, and community leadership. From founding a music institution at 17 to leading the AI Club at my college and coordinating logistics for the NASA Space Apps Hackathon with 2500+ participants, I bring both technical depth and organizational vision to everything I do. I'm driven by a desire to build meaningful products, lead high-impact teams, and create technology that solves real problems.`,
     introTagline: "Building meaningful products at the intersection of technology, leadership & creativity."
   },
@@ -83,7 +87,7 @@ const DEFAULT_DATA = {
       id: "e1",
       title: "Internship Coordinator",
       company: "JnS Global — Abroad Education Consultancy",
-      year: "2025 — Present",
+      year: "2025 — 2026",
       description: "Coordinating comprehensive internship programs including application tracking, placement logistics, and partner communication. Managing end-to-end internship workflows and assisting students through structured onboarding processes. Acting as the primary liaison between the consultancy and its international education partners to ensure seamless program delivery.",
       technologies: ["Project Management", "Communication", "Workflow Management"],
       skillsAchieved: ["Program Coordination", "Stakeholder Management", "Logistics Planning", "Student Mentorship"],
@@ -116,10 +120,10 @@ const DEFAULT_DATA = {
 
   skills: [
     { name: "JavaScript", level: 85, category: "Languages" },
-    { name: "Python", level: 80, category: "Languages" },
+    { name: "Python", level: 65, category: "Languages" },
     { name: "Java", level: 80, category: "Languages" },
-    { name: "C", level: 75, category: "Languages" },
-    { name: "SQL", level: 80, category: "Languages" },
+    { name: "C", level: 88, category: "Languages" },
+    { name: "SQL", level: 89, category: "Languages" },
     { name: "HTML5", level: 90, category: "Languages" },
     { name: "CSS3", level: 90, category: "Languages" },
     { name: "Node.js", level: 82, category: "Frameworks & Runtime" },
@@ -127,18 +131,18 @@ const DEFAULT_DATA = {
     { name: "TypeScript", level: 70, category: "Frameworks & Runtime" },
     { name: "SQLite", level: 80, category: "Databases & Data" },
     { name: "MySQL", level: 75, category: "Databases & Data" },
-    { name: "Oracle DB", level: 65, category: "Databases & Data" },
+    { name: "Oracle DB", level: 90, category: "Databases & Data" },
     { name: "Firebase", level: 75, category: "Databases & Data" },
     { name: "Talend Open Studio", level: 60, category: "Databases & Data" },
     { name: "Git & GitHub", level: 85, category: "Tools & Platforms" },
-    { name: "Figma", level: 75, category: "Tools & Platforms" },
-    { name: "Adobe Photoshop", level: 70, category: "Tools & Platforms" },
+    { name: "Figma", level: 85, category: "Tools & Platforms" },
+    { name: "Adobe Photoshop", level: 85, category: "Tools & Platforms" },
     { name: "Cloudflare", level: 65, category: "Tools & Platforms" },
-    { name: "MS Office", level: 80, category: "Tools & Platforms" },
+    { name: "MS Office", level: 88, category: "Tools & Platforms" },
     { name: "Data Structures", level: 82, category: "Core Concepts" },
     { name: "Operating Systems", level: 75, category: "Core Concepts" },
-    { name: "Theory of Computation", level: 70, category: "Core Concepts" },
-    { name: "Graph Theory", level: 72, category: "Core Concepts" },
+    { name: "Theory of Computation", level: 90, category: "Core Concepts" },
+    { name: "Graph Theory", level: 90, category: "Core Concepts" },
     { name: "Product Management", level: 78, category: "Soft Skills" },
     { name: "Marketing Strategy", level: 80, category: "Soft Skills" },
     { name: "Event Coordination", level: 85, category: "Soft Skills" },
@@ -151,8 +155,8 @@ const DEFAULT_DATA = {
       institution: "Amal Jyothi College of Engineering",
       degree: "B.Tech in Computer Science and Engineering",
       year: "2024 — 2028",
-      details: "SGPA: 9.68 (S1) · 9.81 (S2) · 10.00 (S3)",
-      achievements: ["Manager's Honors List: Awarded for academic excellence in Semesters 1, 2, and 3"]
+      details: "SGPA: 9.68 (S1) · 9.81 (S2) · 10.00 (S3) · 10.00 (S4)",
+      achievements: ["Manager's Honors List: Awarded for academic excellence in Semesters 1, 2, 3 & 4"]
     },
     {
       id: "ed2",
@@ -175,31 +179,32 @@ const DEFAULT_DATA = {
   certificates: [
     {
       id: "c1",
-      title: "Manager's Honors List — S1, S2, S3",
+      title: "Manager's Honors List — S1, S2, S3, S4",
       issuer: "Amal Jyothi College of Engineering",
       year: "2024 — 2026",
-      description: "Awarded for outstanding academic performance across three consecutive semesters."
+      description: "Awarded for outstanding academic performance across four consecutive semesters."
     },
     {
       id: "c2",
       title: "Idea from Industry Competition — Selected Twice",
       issuer: "Amal Jyothi College of Engineering",
-      year: "2025",
+      year: "2025 - 2026",
       description: "Selected twice for presenting innovative industry-relevant project ideas."
     },
     {
       id: "c3",
-      title: "YIP 8.0 Hackathon — WADS Project",
-      issuer: "Young Innovators Programme",
+      title: "Data Structure and Algorithms using Java — NPTEL Top 1%",
+      issuer: "NPTEL — IIT Kharagpur",
       year: "2025",
-      description: "Participated in the Young Innovators Programme 8.0 Hackathon with the Wild Animal Detection System project."
+      description: "Completed the 12-week NPTEL course with an Elite certificate and secured a place in the Top 1% among 3,234 certified candidates, with a score of 78%."
     },
+
     {
       id: "c4",
-      title: "NASA Space Apps Hackathon — Judge Management Co-Lead",
-      issuer: "NASA Space Apps Challenge",
-      year: "2025",
-      description: "Coordinated judge communication and evaluation workflow for a global hackathon with 2500+ participants."
+      title: "Data Base Management System — NPTEL Top 5%",
+      issuer: "NPTEL — IIT Kharagpur",
+      year: "2026",
+      description: "Completed the 8-week NPTEL course with an Elite certificate and secured a place in the Top 5% among 12,988 certified candidates, with a score of 78%."
     }
   ],
 
@@ -219,7 +224,7 @@ const DEFAULT_DATA = {
     {
       id: "l3",
       title: "Class Representative",
-      year: "Present",
+      year: "2024-2026",
       description: "Facilitate communication between faculty and students to address academic concerns at Amal Jyothi College of Engineering."
     },
     {
@@ -260,10 +265,7 @@ const DEFAULT_DATA = {
 // ============================================================
 // Auth credentials (editable in source)
 // ============================================================
-const AUTH = {
-  username: "joyelshaji",
-  password: "joyelshajimarangattil"
-};
+
 
 // ============================================================
 // Data Manager
@@ -275,7 +277,15 @@ const DataManager = {
     const stored = localStorage.getItem(this._storageKey);
     if (stored) {
       try {
-        return JSON.parse(stored);
+        const parsed = JSON.parse(stored);
+        if (!parsed.profile.photo || parsed.profile.photo === "assets/profile.jpg") {
+          parsed.profile.photo = DEFAULT_DATA.profile.photo;
+        }
+        parsed.profile.aboutPhoto = parsed.profile.aboutPhoto || DEFAULT_DATA.profile.aboutPhoto;
+        parsed.profile.outdoorPhoto = parsed.profile.outdoorPhoto || DEFAULT_DATA.profile.outdoorPhoto;
+        parsed.profile.benchPhoto = parsed.profile.benchPhoto || DEFAULT_DATA.profile.benchPhoto;
+        parsed.profile.techPhoto = parsed.profile.techPhoto || DEFAULT_DATA.profile.techPhoto;
+        return parsed;
       } catch {
         return { ...DEFAULT_DATA };
       }

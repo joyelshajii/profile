@@ -7,8 +7,7 @@ const ThemeManager = {
 
   init() {
     const saved = localStorage.getItem(this._storageKey);
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const theme = saved || (prefersDark ? "dark" : "light");
+    const theme = saved || "light";
     this.setTheme(theme, false);
     this._bindToggle();
   },
@@ -19,6 +18,7 @@ const ThemeManager = {
       setTimeout(() => document.documentElement.classList.remove("theme-transitioning"), 600);
     }
     document.documentElement.setAttribute("data-theme", theme);
+    document.body.setAttribute("data-theme", theme);
     localStorage.setItem(this._storageKey, theme);
     this._updateToggleIcon(theme);
   },
