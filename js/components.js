@@ -107,7 +107,7 @@ const Components = {
 
           <!-- Foreground Portrait Cutout Overlapping Typography -->
           <div class="hero-portrait-container">
-            <div class="hero-portrait-frame">
+            <div class="hero-portrait-frame photo-reveal-container">
               <img 
                 src="${heroPhoto}" 
                 alt="${profile.name}" 
@@ -115,6 +115,14 @@ const Components = {
                 id="hero-photo"
                 onerror="this.src='assets/profile.jpg'"
               />
+              <div class="photo-reveal-layer" aria-hidden="true">
+                <img 
+                  src="assets/joyel-about.jpg" 
+                  alt="" 
+                  class="hero-portrait-img" 
+                  onerror="this.src='assets/profile.jpg'"
+                />
+              </div>
             </div>
             <div class="hero-portrait-caption">
               <span class="caption-index">[00]</span>
@@ -209,8 +217,11 @@ const Components = {
             </blockquote>
 
             <div class="about-portrait-card">
-              <div class="about-img-wrap">
-                <img src="${aboutPhoto}" alt="Joyel Shaji portrait" class="about-feature-img" onerror="this.src='${profile.photo}'">
+              <div class="about-img-wrap photo-reveal-container">
+                <img src="${aboutPhoto}" alt="Joyel Shaji portrait" class="about-feature-img" loading="lazy" onerror="this.src='${profile.photo}'">
+                <div class="photo-reveal-layer" aria-hidden="true">
+                  <img src="assets/joyel-outdoor.jpg" alt="" class="about-feature-img" loading="lazy" onerror="this.src='${profile.photo}'">
+                </div>
               </div>
               <div class="about-img-caption">
                 <span></span>
@@ -377,7 +388,12 @@ const Components = {
 
           <div class="split-right">
             <div class="editorial-visual-frame">
-              <img src="${outdoorPhoto}" alt="Joyel Shaji in the field" class="editorial-frame-img" onerror="this.style.display='none'">
+              <div class="editorial-frame-img-wrap photo-reveal-container">
+                <img src="${outdoorPhoto}" alt="Joyel Shaji in the field" class="editorial-frame-img" loading="lazy" onerror="this.style.display='none'">
+                <div class="photo-reveal-layer" aria-hidden="true">
+                  <img src="assets/joyel-bench.jpg" alt="" class="editorial-frame-img" loading="lazy">
+                </div>
+              </div>
               <div class="frame-meta">
                 <span class="frame-tag">EXECUTION & COMMUNITY</span>
                 <p class="frame-quote">"Bridging deep technical analysis with decisive program management."</p>
@@ -566,7 +582,12 @@ const Components = {
 
           <div class="leadership-visual-sidebar">
             <div class="lead-photo-frame">
-              <img src="${benchPhoto}" alt="" class="lead-photo" onerror="this.src='${techPhoto}'">
+              <div class="lead-photo-img-wrap photo-reveal-container">
+                <img src="${benchPhoto}" alt="" class="lead-photo" loading="lazy" onerror="this.src='${techPhoto}'">
+                <div class="photo-reveal-layer" aria-hidden="true">
+                  <img src="assets/joyel-tech.jpg" alt="" class="lead-photo" loading="lazy">
+                </div>
+              </div>
               <div class="lead-photo-caption">
                 <span></span>
                 <span></span>
@@ -574,7 +595,12 @@ const Components = {
             </div>
 
             <div class="lead-photo-frame secondary">
-              <img src="${techPhoto}" alt="" class="lead-photo" onerror="this.style.display='none'">
+              <div class="lead-photo-img-wrap photo-reveal-container">
+                <img src="${techPhoto}" alt="" class="lead-photo" loading="lazy" onerror="this.style.display='none'">
+                <div class="photo-reveal-layer" aria-hidden="true">
+                  <img src="assets/joyel-hero.jpg" alt="" class="lead-photo" loading="lazy">
+                </div>
+              </div>
               <div class="lead-photo-caption">
                 <span></span>
               </div>

@@ -8,6 +8,8 @@ const App = {
     this.render();
     this._bindEvents();
     this._initCursor();
+    this._initOpeningAnimation();
+    this._initPhotoRevealMask();
     this._setupScrollObserver();
 
     // Check if admin is logged in
@@ -44,7 +46,9 @@ const App = {
       ${Admin.renderEditOverlay()}
     `;
 
-    // Re-bind scroll observer and theme icon
+    // Re-bind motion systems, cursor reveals, scroll observer and admin
+    this._initOpeningAnimation();
+    this._initPhotoRevealMask();
     this._setupScrollObserver();
 
     if (Admin.isLoggedIn()) {
@@ -53,11 +57,89 @@ const App = {
   },
 
   // ============================================================
+  // SIGNATURE PAGE-OPENING ANIMATION
+  // ============================================================
+  _initOpeningAnimation() {
+    const hero = document.getElementById('hero');
+    if (!hero) return;
+
+    // Reset hero state and apply opening sequence
+    hero.classList.remove('hero-settled');
+
+    // On mobile devices, complete animation faster (0.95s) vs desktop (1.6s)
+    const settleTime = window.innerWidth <= 768 ? 950 : 1600;
+
+    clearTimeout(this._openingTimer);
+    this._openingTimer = setTimeout(() => {
+      hero.classList.add('hero-settled');
+    }, settleTime);
+  },
+
+  // ============================================================
+  // IN-PHOTO CURSOR-BASED CIRCULAR IMAGE REVEAL
+  // ============================================================
+  _initPhotoRevealMask() {
+    // Strictly disable on touch / coarse pointer devices
+    if (!window.matchMedia("(pointer: fine) and (hover: hover)").matches) return;
+
+    const containers = document.querySelectorAll('.photo-reveal-container');
+    if (!containers.length) return;
+
+    containers.forEach(container => {
+      let isHovered = false;
+      let targetX = 0, targetY = 0;
+      let currX = 0, currY = 0;
+      let rafId = null;
+
+      const updateMask = () => {
+        if (!isHovered) return;
+        // Smooth lerp for liquid tracking inside the photo
+        currX += (targetX - currX) * 0.35;
+        currY += (targetY - currY) * 0.35;
+
+        container.style.setProperty('--reveal-x', `${currX.toFixed(1)}px`);
+        container.style.setProperty('--reveal-y', `${currY.toFixed(1)}px`);
+
+        rafId = requestAnimationFrame(updateMask);
+      };
+
+      container.addEventListener('mouseenter', (e) => {
+        isHovered = true;
+        const rect = container.getBoundingClientRect();
+        targetX = currX = e.clientX - rect.left;
+        targetY = currY = e.clientY - rect.top;
+
+        container.style.setProperty('--reveal-x', `${currX.toFixed(1)}px`);
+        container.style.setProperty('--reveal-y', `${currY.toFixed(1)}px`);
+        container.classList.add('is-revealing');
+
+        if (rafId) cancelAnimationFrame(rafId);
+        rafId = requestAnimationFrame(updateMask);
+      });
+
+      container.addEventListener('mousemove', (e) => {
+        const rect = container.getBoundingClientRect();
+        targetX = e.clientX - rect.left;
+        targetY = e.clientY - rect.top;
+      }, { passive: true });
+
+      container.addEventListener('mouseleave', () => {
+        isHovered = false;
+        container.classList.remove('is-revealing');
+        if (rafId) {
+          cancelAnimationFrame(rafId);
+          rafId = null;
+        }
+      });
+    });
+  },
+
+  // ============================================================
   // MINIMAL CUSTOM CURSOR
   // ============================================================
   _initCursor() {
-    // Only enable custom cursor if fine pointer (desktop mouse)
-    if (!window.matchMedia("(pointer: fine)").matches) return;
+    // Only enable custom cursor if fine pointer and true hover (desktop mouse)
+    if (!window.matchMedia("(pointer: fine) and (hover: hover)").matches) return;
 
     const dot = document.getElementById('cursor-dot');
     const ring = document.getElementById('cursor-ring');
@@ -219,15 +301,22 @@ const App = {
   toggleSidePanel() {
     const panel = document.getElementById('side-panel');
     const overlay = document.getElementById('side-panel-overlay');
-    panel?.classList.toggle('active');
+    const isActive = panel?.classList.toggle('active');
     overlay?.classList.toggle('active');
-    document.body.classList.toggle('drawer-open');
+    if (isActive) {
+      document.body.classList.add('drawer-open');
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.classList.remove('drawer-open');
+      document.body.style.overflow = '';
+    }
   },
 
   closeSidePanel() {
     document.getElementById('side-panel')?.classList.remove('active');
     document.getElementById('side-panel-overlay')?.classList.remove('active');
     document.body.classList.remove('drawer-open');
+    document.body.style.overflow = '';
   },
 
   // ============================================================
